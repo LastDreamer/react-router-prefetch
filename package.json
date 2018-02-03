@@ -10,6 +10,7 @@
   "devDependencies": {
     "@storybook/addon-info": "^3.3.12",
     "@storybook/react": "^3.3.11",
+    "@storybook/storybook-deployer": "^2.2.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.1",
     "babel-jest": "^22.1.0",
@@ -36,6 +37,7 @@
   "dependencies": {},
   "scripts": {
     "start": "start-storybook -p 9001 -c .storybook",
+    "deploy-storybook": "storybook-to-ghpages",
     "lint": "eslint --fix ./src ./tests ./stories",
     "test": "jest"
   },
