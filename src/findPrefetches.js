@@ -9,6 +9,10 @@ const getNodeType = (node) => {
     return 'stateless';
   }
 
+  if (!node.type) {
+    return 'string';
+  }
+
   return node.type.constructor.name.toLocaleLowerCase();
 };
 
