@@ -1,8 +1,13 @@
 {
   "name": "react-router-prefetch",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Prefetch Components data before transition on next route",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "files": [
+    "dist/*/*.js",
+    "LICENSE.md",
+    "README.md"
+  ],
   "repository": "https://github.com/LastDreamer/react-router-prefetch",
   "author": "LastDreamer <oleg.kravchenko88@gmail.com>",
   "license": "MIT",
@@ -16,6 +21,7 @@
     "babel-jest": "^22.1.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
+    "coveralls": "^3.0.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "enzyme-to-json": "^3.3.1",
@@ -29,18 +35,21 @@
     "jest": "^22.1.4",
     "jest-enzyme": "^4.1.1",
     "lodash": "^4.17.4",
-    "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2"
   },
-  "dependencies": {},
+  "dependencies": {
+    "prop-types": "^15.6.0"
+  },
   "scripts": {
     "start": "start-storybook -p 9001 -c .storybook",
+    "build": "babel src -d dist",
     "deploy-storybook": "storybook-to-ghpages",
     "lint": "eslint --fix ./src ./tests ./stories",
-    "test": "jest"
+    "test": "jest",
+    "test:coverage": "jest --coverage && cat ./coverage/lcov.info | coveralls"
   },
   "jest": {
     "setupFiles": [
@@ -48,6 +57,9 @@
     ],
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}"
+    ],
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/test"
     ],
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
