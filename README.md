@@ -56,7 +56,7 @@ export default App;
 ## Properties
 
 | Name           | Type     | Default                    | Description                                                     |
-|----------------+----------+----------------------------+-----------------------------------------------------------------|
+|----------------|----------|----------------------------|-----------------------------------------------------------------|
 | initialHide    | `bool`   | true                       | Hide children on initial transition                             |
 | errorMessage   | `string` | 'Error while page loading' | Message for Promise rejecting callback                          |
 | prefetchMethod | `string` | 'prefetch'                 | Name of method that Prefetch will recursively search in chilren |
