@@ -1,0 +1,50 @@
+{
+  "name": "react-router-prefetch",
+  "version": "0.0.0",
+  "description": "Prefetch Components data before transition on next route",
+  "main": "index.js",
+  "repository": "https://github.com/LastDreamer/react-router-prefetch",
+  "author": "LastDreamer <oleg.kravchenko88@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "@storybook/addon-info": "^3.3.12",
+    "@storybook/react": "^3.3.11",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.2.1",
+    "babel-jest": "^22.1.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "eslint": "^4.16.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-loader": "^1.9.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jest": "^21.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.6.1",
+    "jest": "^22.1.4",
+    "jest-enzyme": "^4.1.1",
+    "lodash": "^4.17.4",
+    "prop-types": "^15.6.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2"
+  },
+  "dependencies": {},
+  "scripts": {
+    "start": "start-storybook -p 9001 -c .storybook",
+    "lint": "eslint --fix ./src ./tests ./stories",
+    "test": "jest"
+  },
+  "jest": {
+    "setupFiles": [
+      "./tests/setup.js"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}"
+    ]
+  }
+}
