@@ -14,17 +14,19 @@ const getNodeType = (node) => {
 
 const initComponent = (node, context) => {
   switch (getNodeType(node)) {
-    case 'statefull':
-      const component = new node.type(node.props, context);
-
-      if (component.getChildContext) {
-        context = Object.assign(context, component.getChildContext());
-      }
+    case 'statefull': {
+      // eslint-disable-next-line new-cap
+      const element = new node.type(node.props, context);
 
       return [
-        component.render(),
-        context,
+        element.render(),
+        Object.assign(
+          context,
+          element.getChildContext
+            ? element.getChildContext()
+            : {}),
       ];
+    }
     case 'stateless':
       return [
         node.type(node.props, context),
@@ -38,7 +40,7 @@ const initComponent = (node, context) => {
   }
 };
 
-const findPrefecthes  = (node, context = {}, prefetchMethod = 'prefetch') => {
+const findPrefecthes = (node, context = {}, prefetchMethod = 'prefetch') => {
   let prefetches = [];
 
   if (!node) {
@@ -56,14 +58,20 @@ const findPrefecthes  = (node, context = {}, prefetchMethod = 'prefetch') => {
 
     if (nodeType === 'symbol') {
       Children.forEach(component.props.children, (child) => {
-        const childPrefetches = findPrefecthes(child, childContext, prefetchMethod);
+        const childPrefetches = findPrefecthes(
+          child,
+          childContext,
+          prefetchMethod,
+        );
 
         if (childPrefetches.length) {
           prefetches = prefetches.concat(childPrefetches);
         }
       });
-    } else if (nodeType !== 'string'){
-      prefetches = prefetches.concat(findPrefecthes(component, context, prefetchMethod));
+    } else if (nodeType !== 'string') {
+      prefetches = prefetches.concat(
+        findPrefecthes(component, context, prefetchMethod),
+      );
     }
   }
 
