@@ -9,8 +9,8 @@ const getNodeType = (node) => {
     return 'stateless';
   }
 
-  if (!node.type) {
-    return 'string';
+  if (!node.type && node) {
+    return node.constructor.name.toLocaleLowerCase();
   }
 
   return node.type.constructor.name.toLocaleLowerCase();
@@ -21,6 +21,10 @@ const initComponent = (node, context) => {
     case 'statefull': {
       // eslint-disable-next-line new-cap
       const element = new node.type(node.props, context);
+
+      if (element.componentWillMount) {
+        element.componentWillMount();
+      }
 
       return [
         element.render(),
@@ -60,8 +64,12 @@ const findPrefecthes = (node, context = {}, prefetchMethod = 'prefetch') => {
   if (component) {
     const nodeType = getNodeType(component);
 
-    if (nodeType === 'symbol') {
-      Children.forEach(component.props.children, (child) => {
+    if (nodeType === 'symbol' || nodeType === 'array') {
+      const children = component.props
+        ? component.props.children
+        : component;
+
+      Children.forEach(children, (child) => {
         const childPrefetches = findPrefecthes(
           child,
           childContext,
