@@ -1,1 +1,1 @@
-export * from './Prefetch';
+export { default, PrefetchComponent } from './Prefetch';
