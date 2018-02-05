@@ -1,4 +1,3 @@
-/* global window */
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter, StaticRouter } from 'react-router-dom';
@@ -125,7 +124,7 @@ Prefetch.propTypes = {
   children: PropTypes.node.isRequired,
   errorMessage: PropTypes.string,
   initialHide: PropTypes.bool,
-  onError: PropTypes.func,
+  onError: PropTypes.func.isRequired,
   onFetchStart: PropTypes.func,
   onFetchEnd: PropTypes.func,
   // eslint-disable-next-line react/no-unused-prop-types
@@ -136,7 +135,6 @@ Prefetch.propTypes = {
 Prefetch.defaultProps = {
   errorMessage: 'Error while page loading',
   initialHide: true,
-  onError: message => window.alert(message),
   onFetchStart: () => {},
   onFetchEnd: () => {},
   prefetchMethod: 'prefetch',

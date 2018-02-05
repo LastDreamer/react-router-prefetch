@@ -1,7 +1,5 @@
-/* global window */
 import React, { Component } from 'react';
 import { MemoryRouter } from 'react-router';
-import { Route } from 'react-router-dom';
 import ShallowRenderer from 'react-test-renderer/shallow';
 import { mount, shallow } from 'enzyme';
 
@@ -9,18 +7,30 @@ import Pages from '../stories/components/Pages';
 import findPrefetches from '../src/findPrefetches';
 import Prefetch from '../src';
 
-class Test extends Component {
-  static prefetch = () => new Promise((resolve) => resolve())
-
-  render = () => <h1>Test</h1>
-}
-
 describe('Prefetch', () => {
   it('should render itself', () => {
     const wrapper = shallow(
-      <Prefetch />,
+      <Prefetch
+        onError={() => {}}
+      />,
     );
     expect(wrapper).toMatchSnapshot();
+  });
+
+  it('should show children if prefetch not needed', () => {
+    const wrapper = mount(
+      <MemoryRouter
+        initialEntries={['/two']}
+      >
+        <Prefetch
+          onError={() => {}}
+        >
+          <Pages />
+        </Prefetch>
+      </MemoryRouter>,
+    );
+
+    expect(wrapper.find('h1').length).toBe(1);
   });
 
   it('should not show children if prefetch needed', () => {
@@ -28,13 +38,32 @@ describe('Prefetch', () => {
       <MemoryRouter
         initialEntries={['/one']}
       >
-        <Prefetch>
+        <Prefetch
+          onError={() => {}}
+        >
           <Pages />
         </Prefetch>
       </MemoryRouter>,
     );
 
     expect(wrapper.find('h1').length).toBe(0);
+  });
+
+  it('should show children if prefetch needed and initialHide are false', () => {
+    const wrapper = mount(
+      <MemoryRouter
+        initialEntries={['/one']}
+      >
+        <Prefetch
+          onError={() => {}}
+          initialHide={false}
+        >
+          <Pages />
+        </Prefetch>
+      </MemoryRouter>,
+    );
+
+    expect(wrapper.find('h1').length).toBe(1);
   });
 });
 
@@ -76,7 +105,7 @@ describe('findPrefetches', () => {
     expect(findPrefetches(renderer.getRenderOutput()).length).toBe(2);
   });
 
-  describe('should get methods with custom names', () => {
+  it('should get methods with custom names', () => {
     const renderer = new ShallowRenderer();
     renderer.render(
       <MemoryRouter
@@ -95,5 +124,32 @@ describe('findPrefetches', () => {
 
   it('should not crash the app if nothing was passed', () => {
     expect(findPrefetches().length).toBe(0);
+  });
+
+  it('should not app when componentWillMount returns error', () => {
+    class ErrorComponent extends Component {
+      componentWillMount() {
+        throw new Error('hello');
+      }
+
+      render() {
+        return (
+          <div />
+        );
+      }
+    }
+    const renderer = new ShallowRenderer();
+    renderer.render(
+      <MemoryRouter
+        initialEntries={['/four']}
+      >
+        <Pages />
+        <ErrorComponent />
+      </MemoryRouter>,
+    );
+
+    expect(() => {
+      findPrefetches(renderer.getRenderOutput());
+    }).not.toThrow();
   });
 });
