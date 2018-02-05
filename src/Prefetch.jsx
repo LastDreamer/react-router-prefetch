@@ -8,25 +8,17 @@ import findPrefetches from './findPrefetches';
 
 class Prefetch extends Component {
   static contextTypes = {
+    store: PropTypes.any,
     router: PropTypes.object.isRequired,
-  };
+  }
 
   static childContextTypes = {
+    store: PropTypes.any,
     router: PropTypes.object.isRequired,
-  };
+  }
 
-  constructor(props) {
-    super(props);
-
-    const prefetches = this.checkPrefetches(props);
-
-    this.state = {
-      initialHide: props.initialHide,
-      prefetches,
-      fetchRequested: !!prefetches.length,
-      location: props.location,
-      nextLocation: props.location,
-    };
+  state = {
+    initialHide: this.props.initialHide,
   }
 
   getChildContext = () => defaultsDeep({
@@ -37,85 +29,83 @@ class Prefetch extends Component {
     },
   }, this.context)
 
-  componentWillMount = this.prefetchRoutes
+  componentDidMount = () => this.checkPrefetches(this.props)
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps = this.checkPrefetches
+
+  checkPrefetches({ children, location, prefetchMethod }) {
     const { createHref } = this.context.router.history;
-    if (createHref(nextProps.location) === createHref(this.state.location)) {
+
+    if (this.state.location &&
+        createHref(location) === createHref(this.state.location)) {
       return;
     }
 
-    const prefetches = this.checkPrefetches(nextProps);
+    const context = defaultsDeep({
+      router: {
+        location,
+      },
+    }, this.getChildContext());
+
+    const prefetches = findPrefetches(
+      <StaticRouter
+        context={this.getChildContext()}
+        location={location}
+      >
+        {React.cloneElement(children)}
+      </StaticRouter>,
+      context,
+      prefetchMethod,
+    );
 
     if (prefetches.length) {
       this.setState({
         prefetches,
         fetchRequested: true,
-        nextLocation: nextProps.location,
+        nextLocation: location,
       }, this.prefetchRoutes);
     } else {
       this.setState({
         initialHide: false,
-        location: nextProps.location,
+        location,
       });
     }
-  }
-
-  checkPrefetches({ children, location, prefetchMethod }) {
-    const context = this.context ? this.getChildContext() : {};
-
-    return findPrefetches(
-      <StaticRouter
-        location={location}
-        context={context}
-      >
-        {children}
-      </StaticRouter>,
-      {},
-      prefetchMethod,
-    );
   }
 
   prefetchRoutes() {
-    if (this.state.fetchRequested) {
-      const {
-        onFetchStart,
-        onFetchEnd,
-        errorMessage,
-        onError,
-      } = this.props;
+    const {
+      onFetchStart,
+      onFetchEnd,
+      errorMessage,
+      onError,
+    } = this.props;
 
-      onFetchStart();
+    onFetchStart();
 
-      Promise
-        .all(this.state.prefetches.map(
-          ([getPromise, props]) => getPromise(props),
-        ))
-        .then(() => {
-          this.setState({
-            initialHide: false,
-            prefetches: [],
-            fetchRequested: false,
-            location: this.state.nextLocation,
-          }, () => {
-            onFetchEnd();
-          });
-        })
-        .catch((error) => {
-          this.setState({
-            fetchRequested: false,
-            prefetches: [],
-            nextLocation: this.state.location,
-          }, () => {
-            onError(errorMessage, error);
-            onFetchEnd();
-          });
+    Promise
+      .all(this.state.prefetches.map(
+        ([getPromise, props]) => getPromise(props),
+      ))
+      .then(() => {
+        this.setState({
+          initialHide: false,
+          prefetches: [],
+          fetchRequested: false,
+          location: this.state.nextLocation,
+        }, () => {
+          onFetchEnd();
         });
-    } else if (this.state.initialHide) {
-      this.setState({
-        initialHide: false,
+      })
+      .catch((error) => {
+        this.setState({
+          fetchRequested: false,
+          prefetches: [],
+          nextLocation: this.state.location,
+        }, () => {
+          onError(errorMessage, error);
+          onFetchEnd();
+        });
       });
-    }
   }
 
   render() {
@@ -141,7 +131,6 @@ Prefetch.propTypes = {
   // eslint-disable-next-line react/no-unused-prop-types
   prefetchMethod: PropTypes.string,
   preloader: PropTypes.node,
-  location: PropTypes.shape().isRequired,
 };
 
 Prefetch.defaultProps = {

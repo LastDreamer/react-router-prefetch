@@ -23,11 +23,24 @@ const initComponent = (node, context) => {
       const element = new node.type(node.props, context);
 
       if (element.componentWillMount) {
-        element.componentWillMount();
+        try {
+          element.componentWillMount();
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.log('error');
+        }
+      }
+
+      let component;
+
+      try {
+        component = element.render();
+      } catch (e) {
+        component = [];
       }
 
       return [
-        element.render(),
+        component,
         Object.assign(
           context,
           element.getChildContext
@@ -64,26 +77,33 @@ const findPrefecthes = (node, context = {}, prefetchMethod = 'prefetch') => {
   if (component) {
     const nodeType = getNodeType(component);
 
-    if (nodeType === 'symbol' || nodeType === 'array') {
-      const children = component.props
-        ? component.props.children
-        : component;
-
-      Children.forEach(children, (child) => {
-        const childPrefetches = findPrefecthes(
-          child,
-          childContext,
-          prefetchMethod,
-        );
-
-        if (childPrefetches.length) {
-          prefetches = prefetches.concat(childPrefetches);
-        }
-      });
-    } else if (nodeType !== 'string') {
+    if (nodeType === 'stateless' || nodeType === 'statefull') {
       prefetches = prefetches.concat(
         findPrefecthes(component, context, prefetchMethod),
       );
+    } else {
+      let children;
+
+      if (nodeType === 'array') {
+        children = component;
+      } else if (component.props && component.props.children) {
+        // eslint-disable-next-line prefer-destructuring
+        children = component.props.children;
+      }
+
+      if (children) {
+        Children.forEach(children, (child) => {
+          const childPrefetches = findPrefecthes(
+            child,
+            childContext,
+            prefetchMethod,
+          );
+
+          if (childPrefetches.length) {
+            prefetches = prefetches.concat(childPrefetches);
+          }
+        });
+      }
     }
   }
 

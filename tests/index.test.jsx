@@ -36,20 +36,6 @@ describe('Prefetch', () => {
 
     expect(wrapper.find('h1').length).toBe(0);
   });
-
-  it('should show children if prefetch not needed', () => {
-    const wrapper = mount(
-      <MemoryRouter
-        initialEntries={['/two']}
-      >
-        <Prefetch>
-          <Pages />
-        </Prefetch>
-      </MemoryRouter>,
-    );
-
-    expect(wrapper.find('h1').length).toBe(1);
-  });
 });
 
 

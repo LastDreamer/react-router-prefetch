@@ -1,6 +1,6 @@
 {
   "name": "react-router-prefetch",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Prefetch Components data before transition on next route",
   "main": "dist/index.js",
   "files": [
@@ -37,12 +37,12 @@
     "jest-enzyme": "^4.1.1",
     "lodash": "^4.17.4",
     "react": "^16.2.0",
-    "react-router": "^4.2.0",
-    "react-router-dom": "^4.2.2"
+    "react-router": "^4.2.0"
   },
   "dependencies": {
     "prop-types": "^15.6.0",
-    "react-dom": "^16.2.0"
+    "react-dom": "^16.2.0",
+    "react-router-dom": "^4.2.2"
   },
   "scripts": {
     "start": "start-storybook -p 9001 -c .storybook",
