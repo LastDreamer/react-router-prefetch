@@ -32,6 +32,8 @@ class Prefetch extends Component {
 
   componentWillReceiveProps = this.checkPrefetches
 
+  transitionsCount = 0
+
   checkPrefetches({ children, location, prefetchMethod }) {
     const { createHref } = this.context.router.history;
 
@@ -39,6 +41,8 @@ class Prefetch extends Component {
         createHref(location) === createHref(this.state.location)) {
       return;
     }
+
+    this.transitionsCount += 1;
 
     const context = defaultsDeep({
       router: {
@@ -66,6 +70,7 @@ class Prefetch extends Component {
     } else {
       this.setState({
         initialHide: false,
+        fetchRequested: false,
         location,
       });
     }
@@ -81,29 +86,35 @@ class Prefetch extends Component {
 
     onFetchStart();
 
+    const currentTransition = this.transitionsCount;
+
     Promise
       .all(this.state.prefetches.map(
         ([getPromise, props]) => getPromise(props),
       ))
       .then(() => {
-        this.setState({
-          initialHide: false,
-          prefetches: [],
-          fetchRequested: false,
-          location: this.state.nextLocation,
-        }, () => {
-          onFetchEnd();
-        });
+        if (currentTransition === this.transitionsCount) {
+          this.setState({
+            initialHide: false,
+            prefetches: [],
+            fetchRequested: false,
+            location: this.state.nextLocation,
+          }, () => {
+            onFetchEnd();
+          });
+        }
       })
       .catch((error) => {
-        this.setState({
-          fetchRequested: false,
-          prefetches: [],
-          nextLocation: this.state.location,
-        }, () => {
-          onError(errorMessage, error);
-          onFetchEnd();
-        });
+        if (currentTransition === this.transitionsCount) {
+          this.setState({
+            fetchRequested: false,
+            prefetches: [],
+            nextLocation: this.state.location,
+          }, () => {
+            onError(errorMessage, error);
+            onFetchEnd();
+          });
+        }
       });
   }
 
