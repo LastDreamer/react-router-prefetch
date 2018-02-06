@@ -117,7 +117,15 @@ function* fetchData({ payload, resolve, reject }) {
 
 ```
 
-## Properties
+## createSagaPrefetch Properties
+
+| # | Name    | Description                                                         |
+|---+---------+---------------------------------------------------------------------|
+| 1 | props   | Properties of Component - it used for get and call dispatch from it |
+| 2 | type    | action.type that would be passed to dispatch                        |
+| 3 | payload | action.payload that would be passed to dispatch                     |
+
+## Prefetch Properties
 
 | Name           | Type     | Required | Default                    | Description                                                      |
 |----------------|----------|----------|----------------------------|------------------------------------------------------------------|
