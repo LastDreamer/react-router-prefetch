@@ -6,10 +6,9 @@ import ShallowRenderer from 'react-test-renderer/shallow';
 import { mount, shallow } from 'enzyme';
 import { createMemoryHistory } from 'history';
 
-import Pages from '../../stories/components/Pages';
-import findPrefetches from '../findPrefetches';
-import createSagaPrefetch from '../createSagaPrefetch';
-import Prefetch from '../';
+import Pages from '../stories/components/Pages';
+import findPrefetches from '../src/findPrefetches';
+import Prefetch, { createSagaPrefetch } from '../src';
 
 describe('Prefetch', () => {
   it('should render itself', () => {
