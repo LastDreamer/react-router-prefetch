@@ -68,7 +68,7 @@ const findPrefecthes = (node, context = {}, prefetchMethod = 'prefetch') => {
     return prefetches;
   }
 
-  if (node.type && node.type[prefetchMethod]) {
+  if (node.type && node.type[prefetchMethod] && node.type.name !== 'Connect') {
     prefetches.push([node.type[prefetchMethod], node.props]);
   }
 

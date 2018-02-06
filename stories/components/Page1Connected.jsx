@@ -1,19 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 
 import { createSagaPrefetch } from '../../src';
 import types from '../types';
+import { Page3Connected } from './Page3';
 
-class Page3 extends Component {
-  static prefetch() {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(1);
-      }, 1000);
-    });
-  }
-
+class Page1Connected extends Component {
   static loadingBarPrefetch(props) {
     return new Promise((resolve) => {
       props.dispatch(showLoading());
@@ -22,21 +15,24 @@ class Page3 extends Component {
         props.dispatch(hideLoading());
 
         resolve(props);
-      }, 1000);
+      }, 2000);
     });
   }
 
   static sagaPrefetch = props => createSagaPrefetch(
     props,
     types.DATA_REQUEST,
-    'page2',
+    'page1',
   )
 
   render() {
-    return (<h2>Component with delay 1s</h2>);
+    return (
+      <Fragment>
+        <h1>Component with delay 2s</h1>
+        <Page3Connected />
+      </Fragment>
+    );
   }
 }
 
-export const Page3Connected = connect()(Page3);
-
-export default Page3;
+export default connect()(Page1Connected);

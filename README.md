@@ -60,7 +60,63 @@ const App = (history) => (
 export default App;
 ```
 
-### Properties
+### Handle prefetch in redux saga
+
+1. Same as previous example, but prefetch method should be created by `createSagaPrefetch`
+
+```jsx
+// component.jsx
+import React, ( Component ) from 'react';
+import { createSagaPrefetch } from 'react-router-prefetch';
+
+class MyComponent extends Component {
+  static prefetch = props => createSagaPrefetch({
+    props,
+    'ACTION_TYPE',
+    // payload
+    {
+      key: props.id,
+    },
+  })
+  
+  render() {
+    ...
+  }
+}
+```
+
+2. Add handler into your saga
+
+```js
+// sagas.js
+import { call, put } from 'redux-saga/effects';
+
+import api from './api';
+import types from './types';
+
+function* fetchData({ payload, resolve, reject }) {
+  try {
+    const data = yield call(api, payload);
+
+    yield put({
+      type: types.DATA_SUCCESS,
+      payload: data,
+    });
+
+    resolve();
+  } catch (e) {
+    yield put({
+      type: types.DATA_FAILURE,
+      payload: e,
+    });
+
+    reject(e);
+  }
+}
+
+```
+
+## Properties
 
 | Name           | Type     | Required | Default                    | Description                                                      |
 |----------------|----------|----------|----------------------------|------------------------------------------------------------------|

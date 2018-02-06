@@ -4,8 +4,10 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { withInfo, setDefaults } from '@storybook/addon-info';
 
+import App from './App';
 import Router from './components/Router';
 import Pages from './components/Pages';
+import ReduxPages from './components/ReduxPages';
 import Prefetch, { PrefetchComponent } from '../src';
 
 setDefaults({
@@ -94,9 +96,35 @@ storiesOf('Common Usage', module)
   )));
 
 storiesOf('Usage With Redux', module)
-  .add('react-redux-loading-bar', () => (
-    <h1>Exaples coming soon</h1>
-  ))
-  .add('handlers in redux-saga', () => (
-    <h1>Exaples coming soon</h1>
-  ));
+  .add('react-redux-loading-bar', withInfo()(() => (
+    <Router
+      initialEntries={['/one']}
+      initialIndex={0}
+    >
+      <Prefetch
+        prefetchMethod="loadingBarPrefetch"
+        errorMessage="New error message"
+        onError={message => window.alert(message)}
+      >
+        <App>
+          <ReduxPages />
+        </App>
+      </Prefetch>
+    </Router>
+  )))
+  .add('handlers in redux-saga', withInfo()(() => (
+    <Router
+      initialEntries={['/one']}
+      initialIndex={0}
+    >
+      <Prefetch
+        prefetchMethod="sagaPrefetch"
+        errorMessage="New error message"
+        onError={message => window.alert(message)}
+      >
+        <App>
+          <ReduxPages />
+        </App>
+      </Prefetch>
+    </Router>
+  )));
