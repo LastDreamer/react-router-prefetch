@@ -1,6 +1,6 @@
 {
   "name": "react-router-prefetch",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Prefetch Components data before transition on next route",
   "main": "dist/index.js",
   "files": [
@@ -63,7 +63,7 @@
     "build": "babel src -d dist",
     "prepublish": "npm run build",
     "deploy": "storybook-to-ghpages",
-    "lint": "eslint --fix ./src ./stories",
+    "lint": "eslint --fix ./src ./tests ./stories",
     "test": "jest",
     "test:coverage": "jest --coverage && cat ./coverage/lcov.info | coveralls"
   },

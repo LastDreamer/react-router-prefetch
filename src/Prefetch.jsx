@@ -42,8 +42,8 @@ class Prefetch extends Component {
     const { createHref } = this.context.router.history;
 
     if (
-      !this.state.location ||
-      createHref(location) !== createHref(this.state.location)
+      !this.state.nextLocation ||
+      createHref(location) !== createHref(this.state.nextLocation)
     ) {
       this.transitionsCount += 1;
 
@@ -75,6 +75,7 @@ class Prefetch extends Component {
           initialHide: false,
           fetchRequested: false,
           location,
+          nextLocation: location,
         });
       }
     }

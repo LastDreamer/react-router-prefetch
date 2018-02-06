@@ -1,6 +1,6 @@
 import { action } from '@storybook/addon-actions';
 
-export default (query) => new Promise((resolve, reject) => {
+export default query => new Promise((resolve, reject) => {
   action('Call api method')(query);
   setTimeout(() => {
     if (query === 'error') {

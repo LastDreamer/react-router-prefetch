@@ -139,15 +139,16 @@ describe('Prefetch', () => {
     });
   });
 
-  it('should not call callbacks of got same path', () => {
+  it('should call callbacks of got another path', () => {
     const node = document.createElement('div');
     const onStart = jest.fn();
     const onEnd = jest.fn();
     const history = createMemoryHistory();
 
-    ReactDom.render(
+    history.push({ pathname: '/three' });
+
+    mount(
       <Router
-        initialEntries={['/three']}
         history={history}
       >
         <Prefetch
@@ -161,12 +162,80 @@ describe('Prefetch', () => {
       node,
     );
 
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        history.push({ pathname: '/one' });
+
+        setTimeout(() => {
+          expect(onStart).toHaveBeenCalledTimes(2);
+          expect(onEnd).toHaveBeenCalledTimes(1);
+          resolve();
+        }, 2001);
+      }, 10);
+    });
+  });
+
+  it('should not call callbacks of got same path', () => {
+    const node = document.createElement('div');
+    const onStart = jest.fn();
+    const onEnd = jest.fn();
+    const history = createMemoryHistory();
+
     history.push({ pathname: '/three' });
+
+    ReactDom.render(
+      <Router
+        history={history}
+      >
+        <Prefetch
+          onError={() => {}}
+          onFetchStart={onStart}
+          onFetchEnd={onEnd}
+        >
+          <Pages />
+        </Prefetch>
+      </Router>,
+      node,
+    );
+
 
     return new Promise((resolve) => {
       setTimeout(() => {
-        expect(onStart).toHaveBeenCalledTimes(1);
-        expect(onEnd).toHaveBeenCalledTimes(1);
+        history.push({ pathname: '/three' });
+        setTimeout(() => {
+          expect(onStart).toHaveBeenCalledTimes(1);
+          expect(onEnd).toHaveBeenCalledTimes(1);
+          resolve();
+        }, 2001);
+      }, 10);
+    });
+  });
+
+  it('should not show error of old path', () => {
+    const node = document.createElement('div');
+    const onError = jest.fn();
+    const history = createMemoryHistory();
+
+    history.push({ pathname: '/four' });
+
+    ReactDom.render(
+      <Router
+        history={history}
+      >
+        <Prefetch
+          onError={onError}
+        >
+          <Pages />
+        </Prefetch>
+      </Router>,
+      node,
+    );
+
+    history.push({ pathname: '/two' });
+
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        expect(onError).not.toHaveBeenCalled();
         resolve();
       }, 2001);
     });
