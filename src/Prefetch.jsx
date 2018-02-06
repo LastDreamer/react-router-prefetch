@@ -37,42 +37,42 @@ class Prefetch extends Component {
   checkPrefetches({ children, location, prefetchMethod }) {
     const { createHref } = this.context.router.history;
 
-    if (this.state.location &&
-        createHref(location) === createHref(this.state.location)) {
-      return;
-    }
+    if (
+      !this.state.location ||
+      createHref(location) !== createHref(this.state.location)
+    ) {
+      this.transitionsCount += 1;
 
-    this.transitionsCount += 1;
+      const context = defaultsDeep({
+        router: {
+          location,
+        },
+      }, this.getChildContext());
 
-    const context = defaultsDeep({
-      router: {
-        location,
-      },
-    }, this.getChildContext());
+      const prefetches = findPrefetches(
+        <StaticRouter
+          context={this.getChildContext()}
+          location={location}
+        >
+          {React.cloneElement(children)}
+        </StaticRouter>,
+        context,
+        prefetchMethod,
+      );
 
-    const prefetches = findPrefetches(
-      <StaticRouter
-        context={this.getChildContext()}
-        location={location}
-      >
-        {React.cloneElement(children)}
-      </StaticRouter>,
-      context,
-      prefetchMethod,
-    );
-
-    if (prefetches.length) {
-      this.setState({
-        prefetches,
-        fetchRequested: true,
-        nextLocation: location,
-      }, this.prefetchRoutes);
-    } else {
-      this.setState({
-        initialHide: false,
-        fetchRequested: false,
-        location,
-      });
+      if (prefetches.length) {
+        this.setState({
+          prefetches,
+          fetchRequested: true,
+          nextLocation: location,
+        }, this.prefetchRoutes);
+      } else {
+        this.setState({
+          initialHide: false,
+          fetchRequested: false,
+          location,
+        });
+      }
     }
   }
 

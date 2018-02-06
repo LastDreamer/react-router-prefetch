@@ -1,10 +1,14 @@
+/* global document */
 import React, { Component } from 'react';
-import { MemoryRouter } from 'react-router';
+import ReactDom from 'react-dom';
+import { MemoryRouter, Router } from 'react-router';
 import ShallowRenderer from 'react-test-renderer/shallow';
 import { mount, shallow } from 'enzyme';
+import { createMemoryHistory } from 'history';
 
 import Pages from '../stories/components/Pages';
 import findPrefetches from '../src/findPrefetches';
+import createSagaPrefetch from '../src/createSagaPrefetch';
 import Prefetch from '../src';
 
 describe('Prefetch', () => {
@@ -64,6 +68,109 @@ describe('Prefetch', () => {
     );
 
     expect(wrapper.find('h1').length).toBe(1);
+  });
+
+  it('should call onFetchStart callback', () => {
+    const node = document.createElement('div');
+    const spy = jest.fn();
+    ReactDom.render(
+      <MemoryRouter
+        initialEntries={['/one']}
+      >
+        <Prefetch
+          onError={() => {}}
+          onFetchStart={spy}
+        >
+          <Pages />
+        </Prefetch>
+      </MemoryRouter>,
+      node,
+    );
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should call onFetchEnd callback', () => {
+    const node = document.createElement('div');
+    const spy = jest.fn();
+    ReactDom.render(
+      <MemoryRouter
+        initialEntries={['/three']}
+      >
+        <Prefetch
+          onError={() => {}}
+          onFetchEnd={spy}
+        >
+          <Pages />
+        </Prefetch>
+      </MemoryRouter>,
+      node,
+    );
+
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        expect(spy).toHaveBeenCalled();
+        resolve();
+      }, 1001);
+    });
+  });
+
+  it('should call onError callback', () => {
+    const node = document.createElement('div');
+    const spy = jest.fn();
+
+    ReactDom.render(
+      <MemoryRouter
+        initialEntries={['/four']}
+      >
+        <Prefetch
+          onError={spy}
+        >
+          <Pages />
+        </Prefetch>
+      </MemoryRouter>,
+      node,
+    );
+
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        expect(spy).toHaveBeenCalled();
+        resolve();
+      }, 1501);
+    });
+  });
+
+  it('should not call callbacks of got same path', () => {
+    const node = document.createElement('div');
+    const onStart = jest.fn();
+    const onEnd = jest.fn();
+    const history = createMemoryHistory();
+
+    ReactDom.render(
+      <Router
+        initialEntries={['/three']}
+        history={history}
+      >
+        <Prefetch
+          onError={() => {}}
+          onFetchStart={onStart}
+          onFetchEnd={onEnd}
+        >
+          <Pages />
+        </Prefetch>
+      </Router>,
+      node,
+    );
+
+    history.push({ pathname: '/three' });
+
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        expect(onStart).toHaveBeenCalledTimes(1);
+        expect(onEnd).toHaveBeenCalledTimes(1);
+        resolve();
+      }, 2001);
+    });
   });
 });
 
@@ -151,5 +258,20 @@ describe('findPrefetches', () => {
     expect(() => {
       findPrefetches(renderer.getRenderOutput());
     }).not.toThrow();
+  });
+});
+
+describe('createSagaPrefetch', () => {
+  it('should return Promise', () => {
+    const prefetch = createSagaPrefetch(
+      {
+        dispatch: () => {},
+      },
+      'type',
+      () => {},
+      () => {},
+    );
+
+    expect(prefetch.constructor.name).toBe('Promise');
   });
 });
