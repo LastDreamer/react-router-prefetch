@@ -6,10 +6,10 @@ import ShallowRenderer from 'react-test-renderer/shallow';
 import { mount, shallow } from 'enzyme';
 import { createMemoryHistory } from 'history';
 
-import Pages from '../stories/components/Pages';
-import findPrefetches from '../src/findPrefetches';
-import createSagaPrefetch from '../src/createSagaPrefetch';
-import Prefetch from '../src';
+import Pages from '../../stories/components/Pages';
+import findPrefetches from '../findPrefetches';
+import createSagaPrefetch from '../createSagaPrefetch';
+import Prefetch from '../';
 
 describe('Prefetch', () => {
   it('should render itself', () => {
@@ -53,7 +53,7 @@ describe('Prefetch', () => {
     expect(wrapper.find('h1').length).toBe(0);
   });
 
-  it('should show children if prefetch needed and initialHide are false', () => {
+  it('should show children if initialHide are false', () => {
     const wrapper = mount(
       <MemoryRouter
         initialEntries={['/one']}

@@ -61,7 +61,7 @@ const initComponent = (node, context) => {
   }
 };
 
-const findPrefecthes = (node, context = {}, prefetchMethod = 'prefetch') => {
+const findPrefetches = (node, context = {}, prefetchMethod = 'prefetch') => {
   let prefetches = [];
 
   if (!node) {
@@ -79,7 +79,7 @@ const findPrefecthes = (node, context = {}, prefetchMethod = 'prefetch') => {
 
     if (nodeType === 'stateless' || nodeType === 'statefull') {
       prefetches = prefetches.concat(
-        findPrefecthes(component, context, prefetchMethod),
+        findPrefetches(component, context, prefetchMethod),
       );
     } else {
       let children;
@@ -93,7 +93,7 @@ const findPrefecthes = (node, context = {}, prefetchMethod = 'prefetch') => {
 
       if (children) {
         Children.forEach(children, (child) => {
-          const childPrefetches = findPrefecthes(
+          const childPrefetches = findPrefetches(
             child,
             childContext,
             prefetchMethod,
@@ -110,4 +110,4 @@ const findPrefecthes = (node, context = {}, prefetchMethod = 'prefetch') => {
   return prefetches;
 };
 
-export default findPrefecthes;
+export default findPrefetches;

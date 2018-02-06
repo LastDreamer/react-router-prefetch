@@ -16,8 +16,12 @@ class Prefetch extends Component {
     router: PropTypes.object.isRequired,
   }
 
-  state = {
-    initialHide: this.props.initialHide,
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      initialHide: this.props.initialHide,
+    };
   }
 
   getChildContext = () => defaultsDeep({
@@ -30,7 +34,7 @@ class Prefetch extends Component {
 
   componentDidMount = () => this.checkPrefetches(this.props)
 
-  componentWillReceiveProps = this.checkPrefetches
+  componentWillReceiveProps = nextProps => this.checkPrefetches(nextProps)
 
   transitionsCount = 0
 
