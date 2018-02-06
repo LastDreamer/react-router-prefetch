@@ -60,7 +60,7 @@ const App = (history) => (
 export default App;
 ```
 
-### Handle prefetch in redux saga
+## Handle prefetch in redux saga
 
 1. Same as previous example, but prefetch method should be created by `createSagaPrefetch`
 
