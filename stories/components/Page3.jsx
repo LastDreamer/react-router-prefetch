@@ -1,15 +1,18 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 
 import { createSagaPrefetch } from '../../src';
 import types from '../types';
 
+let asyncData;
+
 class Page3 extends Component {
   static prefetch() {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(1);
+        asyncData = 'Async data';
+        resolve();
       }, 1000);
     });
   }
@@ -33,7 +36,12 @@ class Page3 extends Component {
   )
 
   render() {
-    return (<h2>Component with delay 1s</h2>);
+    return (
+      <Fragment>
+        <h2>Component with delay 1s</h2>
+        <p>{asyncData}</p>
+      </Fragment>
+    );
   }
 }
 

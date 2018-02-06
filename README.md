@@ -23,15 +23,21 @@ For prefetching enable you need only 2 steps:
 // component.jsx
 import React, ( Component ) from 'react';
 
+let asyncData = {};
+
 class MyComponent extends Component {
   static prefetch(props) {
     return new Promise((resolve) => {
       fetch(`/data/${props.id}`)
-        .then(data => resolve(data));
+        .then(data => {
+          asyncData = data;
+          resolve();
+        });
     });
   }
   
   render() {
+    const { foo, bar } = asyncData;
     ...
   }
 }
