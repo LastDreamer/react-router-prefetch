@@ -1,6 +1,7 @@
 # react-router-prefetch
 
 [![Build Status](https://travis-ci.org/LastDreamer/react-router-prefetch.svg?branch=master)](https://travis-ci.org/LastDreamer/react-router-prefetch)
+[![dependencies Status](https://david-dm.org/lastdreamer/react-router-prefetch/status.svg)](https://david-dm.org/lastdreamer/react-router-prefetch)
 [![Coverage Status](https://coveralls.io/repos/github/LastDreamer/react-router-prefetch/badge.svg?branch=master)](https://coveralls.io/github/LastDreamer/react-router-prefetch?branch=master)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=react-router-prefetch&metric=alert_status)](https://sonarcloud.io/dashboard?id=react-router-prefetch)
 
