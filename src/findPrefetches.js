@@ -72,7 +72,7 @@ const findPrefetches = (node, context = {}, prefetchMethod = 'prefetch') => {
       node.type[prefetchMethod] &&
       !node.type.WrappedComponent &&
       !node.type.Naked
-     ) {
+  ) {
     prefetches.push([node.type[prefetchMethod], node.props]);
   }
 
