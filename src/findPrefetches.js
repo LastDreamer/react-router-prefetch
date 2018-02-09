@@ -68,7 +68,7 @@ const findPrefetches = (node, context = {}, prefetchMethod = 'prefetch') => {
     return prefetches;
   }
 
-  if (node.type && node.type[prefetchMethod] && node.type.name !== 'Connect') {
+  if (node.type && node.type[prefetchMethod] && !node.type.WrappedComponent) {
     prefetches.push([node.type[prefetchMethod], node.props]);
   }
 
