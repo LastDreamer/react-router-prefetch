@@ -32,13 +32,13 @@ class Prefetch extends Component {
     },
   }, this.context)
 
-  componentDidMount = () => this.checkPrefetches(this.props)
+  componentDidMount = this.checkPrefetches
 
-  componentWillReceiveProps = nextProps => this.checkPrefetches(nextProps)
+  componentWillReceiveProps = this.checkPrefetches
 
   transitionsCount = 0
 
-  checkPrefetches({ children, location, prefetchMethod }) {
+  checkPrefetches({ children, location, prefetchMethod } = this.props) {
     const { createHref } = this.context.router.history;
 
     if (
@@ -75,13 +75,12 @@ class Prefetch extends Component {
           initialHide: false,
           fetchRequested: false,
           location,
-          nextLocation: location,
         });
       }
     }
   }
 
-  prefetchRoutes() {
+  prefetchRoutes = () => {
     const {
       onFetchStart,
       onFetchEnd,
