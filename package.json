@@ -1,6 +1,6 @@
 {
   "name": "react-router-prefetch",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Prefetch Components data before transition on next route",
   "main": "dist/index.js",
   "files": [
@@ -52,7 +52,7 @@
     "data preloading",
     "prefetch data"
   ],
-  "peerDependencies": {
+  "dependencies": {
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
