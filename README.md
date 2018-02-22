@@ -76,6 +76,7 @@ export default App;
 // component.jsx
 import React, ( Component ) from 'react';
 import { createSagaPrefetch } from 'react-router-prefetch';
+import { connect } from 'react-redux';
 
 class MyComponent extends Component {
   static prefetch = props => createSagaPrefetch({
@@ -91,6 +92,8 @@ class MyComponent extends Component {
     ...
   }
 }
+
+export default connect()(MyComponent);
 ```
 
 2. Add handler into your saga
