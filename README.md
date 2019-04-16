@@ -147,3 +147,5 @@ function* fetchData({ payload, resolve, reject }) {
 | onFetchStart   | `func`   |          |                            | Callback before prefetch                                         |
 | onFetchEnd     | `func`   |          |                            | Callback after prefetch or reject                                |
 
+## Credits
+Feel free to open issues
