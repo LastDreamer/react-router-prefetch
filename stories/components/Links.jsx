@@ -15,5 +15,8 @@ export default () => (
     <li>
       <Link to="/four">Prefetch error</Link>
     </li>
+    <li>
+      <Link to="/five">Prefetch with functional component</Link>
+    </li>
   </ul>
 );

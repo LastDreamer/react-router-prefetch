@@ -1,6 +1,6 @@
 {
   "name": "react-router-prefetch",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "Prefetch Components data before transition on next route",
   "main": "dist/index.js",
   "files": [
