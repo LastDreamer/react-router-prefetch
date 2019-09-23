@@ -1,4 +1,4 @@
-# react-router-prefetch
+# react-router-prefetch (Deprecated)
 
 [![Build Status](https://travis-ci.org/LastDreamer/react-router-prefetch.svg?branch=master)](https://travis-ci.org/LastDreamer/react-router-prefetch)
 [![dependencies Status](https://david-dm.org/lastdreamer/react-router-prefetch/status.svg)](https://david-dm.org/lastdreamer/react-router-prefetch)
